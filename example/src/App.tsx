@@ -12,14 +12,30 @@ import * as ReefReferral from 'react-native-reef-referral';
 
 export default function App() {
   const [result, setResult] = React.useState<ReefReferral.ReferralStatus>();
+  const [deepLink, setDeepLink] = React.useState<string | null>();
+
+  React.useEffect(() => {
+    Linking.getInitialURL().then(setDeepLink);
+  }, []);
 
   React.useEffect(() => {
     ReefReferral.getReferralStatusAsync().then(setResult);
   }, []);
 
+  React.useEffect(() => {
+    const listener = Linking.addEventListener('url', ({ url }) => {
+      console.log('handling deep link', url);
+      setDeepLink(url);
+    });
+    return () => {
+      listener.remove();
+    };
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
+        <Text>Deep Link: {JSON.stringify(deepLink)}</Text>
         <Text>Result: {JSON.stringify(result, null, 2)}</Text>
         <Button
           title="Start"
@@ -56,8 +72,9 @@ export default function App() {
         />
         <Button
           title="handleDeepLinkAsync"
+          disabled={!deepLink}
           onPress={() => {
-            ReefReferral.handleDeepLinkAsync('abc').catch(console.warn);
+            ReefReferral.handleDeepLinkAsync(deepLink!).catch(console.warn);
           }}
         />
         <Button
