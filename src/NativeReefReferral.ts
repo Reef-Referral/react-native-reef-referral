@@ -9,6 +9,9 @@ export interface NativeReefReferralSpec extends TurboModule {
   triggerSenderSuccessAsync(): Promise<void>;
   triggerReceiverSuccessAsync(): Promise<void>;
   setUserId(userId: string): Promise<void>;
+
+  addListener: (eventType: string) => void;
+  removeListeners: (count: number) => void;
 }
 
 export const NativeReefReferral =

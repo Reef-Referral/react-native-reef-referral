@@ -15,6 +15,12 @@ export default function App() {
   const [deepLink, setDeepLink] = React.useState<string | null>();
 
   React.useEffect(() => {
+    ReefReferral.startAsync({
+      apiKey: '12b5831a-c4eb-4855-878f-e5fdacce8e18',
+    });
+  }, []);
+
+  React.useEffect(() => {
     Linking.getInitialURL().then(setDeepLink);
   }, []);
 
@@ -32,19 +38,24 @@ export default function App() {
     };
   }, []);
 
+  React.useEffect(() => {
+    const listener = ReefReferral.addEventListener(
+      'referralStatusUpdated',
+      (status) => {
+        console.log('handling updated status', status);
+        setResult(status);
+      }
+    );
+    return () => {
+      listener.remove();
+    };
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
         <Text>Deep Link: {JSON.stringify(deepLink)}</Text>
         <Text>Result: {JSON.stringify(result, null, 2)}</Text>
-        <Button
-          title="Start"
-          onPress={() => {
-            ReefReferral.startAsync({
-              apiKey: '12b5831a-c4eb-4855-878f-e5fdacce8e18',
-            });
-          }}
-        />
         <Button
           title="Open URL"
           disabled={!result?.senderStatus.linkUrl}

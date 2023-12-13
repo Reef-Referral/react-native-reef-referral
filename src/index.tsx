@@ -1,3 +1,5 @@
+import { NativeEventEmitter } from 'react-native';
+
 import { ReefReferral } from './ReefReferral';
 import type { ReferralStatus } from './types';
 
@@ -30,3 +32,14 @@ export async function triggerReceiverSuccessAsync(): Promise<void> {
 export async function setUserId(userId: string): Promise<void> {
   return await ReefReferral.setUserId(userId);
 }
+
+const Emitter = new NativeEventEmitter(ReefReferral);
+
+export const addEventListener = (
+  eventType: 'referralStatusUpdated',
+  listener: (referralStatus: ReferralStatus) => unknown
+) => {
+  return Emitter.addListener(eventType, listener);
+};
+
+export const removeAllListeners = Emitter.removeAllListeners;

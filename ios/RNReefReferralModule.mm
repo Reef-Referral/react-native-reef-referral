@@ -8,7 +8,27 @@
 #import "react_native_reef_referral-Swift.h"
 #endif
 
+@interface RNReefReferralModule ()
+
+@property (nonatomic) RNReefReferral *reef;
+
+@end
+
 @implementation RNReefReferralModule
+
+- (instancetype)init
+{
+  self = [super init];
+  if (self) {
+    _reef = [[RNReefReferral alloc] initWithModule:self];
+  }
+  return self;
+}
+
++ (BOOL)requiresMainQueueSetup
+{
+  return NO;
+}
 
 RCT_EXPORT_MODULE(ReefReferral)
 
@@ -16,14 +36,14 @@ RCT_EXPORT_METHOD(startAsync:(NSString *)apiKey
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
-  [[RNReefReferral shared] start:apiKey];
+  [_reef start:apiKey];
   resolve(nil);
 }
 
 RCT_EXPORT_METHOD(getReferralStatusAsync:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
-  [[RNReefReferral shared] getReferralStatus:^(NSDictionary<NSString *,id> *referralStatus, NSError *err) {
+  [_reef getReferralStatus:^(NSDictionary<NSString *,id> *referralStatus, NSError *err) {
       if (referralStatus) {
           resolve(referralStatus);
       } else {
@@ -42,21 +62,21 @@ RCT_EXPORT_METHOD(handleDeepLinkAsync:(NSString *)urlString
     return;
   }
 
-  [[RNReefReferral shared] handleDeepLink:url];
+  [_reef handleDeepLink:url];
   resolve(nil);
 }
 
 RCT_EXPORT_METHOD(triggerSenderSuccessAsync:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
-  [[RNReefReferral shared] triggerSenderSuccess];
+  [_reef triggerSenderSuccess];
   resolve(nil);
 }
 
 RCT_EXPORT_METHOD(triggerReceiverSuccessAsync:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
-  [[RNReefReferral shared] triggerReceiverSuccess];
+  [_reef triggerReceiverSuccess];
   resolve(nil);
 }
 
@@ -64,8 +84,29 @@ RCT_EXPORT_METHOD(setUserId:(NSString *)userID
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {
-  [[RNReefReferral shared] setUserID:userID];
+  [_reef setUserID:userID];
   resolve(nil);
+}
+
+
+- (void)startObserving
+{
+  [_reef startObserving];
+}
+
+- (NSArray<NSString *> *)supportedEvents
+{
+  return @[ @"referralStatusUpdated" ];
+}
+
+- (void)handleReferralStatusUpdated:(NSDictionary<NSString *, id> *)referralStatus
+{
+  [self sendEventWithName:@"referralStatusUpdated" body:referralStatus];
+}
+
+- (void)stopObserving
+{
+  [_reef stopObserving];
 }
 
 // Don't compile this code when we build for the old architecture.

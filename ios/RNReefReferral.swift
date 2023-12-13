@@ -10,14 +10,17 @@ import ReefReferral
 
 @objc(RNReefReferral)
 public class RNReefReferral: NSObject, ReefReferralDelegate {
-  @objc(shared)
-  public static let shared = RNReefReferral()
-
   let reef = ReefReferral.shared
+  let module: RNReefReferralModule
+
+  @objc(initWithModule:)
+  public init(module: RNReefReferralModule) {
+    self.module = module
+  }
 
   @objc(start:)
   public func start(apiKey: String) -> Void {
-    reef.start(apiKey: apiKey, delegate: self)
+    reef.start(apiKey: apiKey)
   }
 
   @objc(getReferralStatus:)
@@ -44,10 +47,24 @@ public class RNReefReferral: NSObject, ReefReferralDelegate {
   public func setUserID(id: String) {
     reef.setUserID(id: id)
   }
+
+  @objc(startObserving)
+  public func startObserving() -> Void {
+    reef.delegate = self
+  }
+
+  public func statusUpdated(referralStatus: ReefReferral.ReferralStatus) {
+    self.module.handleReferralStatusUpdated(referralStatus.asDictionary)
+  }
+
+  @objc(stopObserving)
+  public func stopObserving() -> Void {
+    reef.delegate = nil
+  }
 }
 
 extension ReefReferral.ReferralStatus {
-  var asDictionary: [String: Any?] {
+  var asDictionary: [String: Any] {
     [
       "receiverStatus": [
         "offerCodeUrl": (receiverStatus.offerCodeURL?.absoluteString ?? NSNull()) as Any,
