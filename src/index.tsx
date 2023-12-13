@@ -1,29 +1,32 @@
-import { NativeModules, Platform } from 'react-native';
+import { ReefReferral } from './ReefReferral';
+import type { ReferralStatus } from './types';
 
-const LINKING_ERROR =
-  `The package 'react-native-reef-referral' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo Go\n';
+export * from './types';
 
-// @ts-expect-error
-const isTurboModuleEnabled = global.__turboModuleProxy != null;
+export async function startAsync({
+  apiKey,
+}: {
+  apiKey: string;
+}): Promise<void> {
+  return await ReefReferral.startAsync(apiKey);
+}
 
-const ReefReferralModule = isTurboModuleEnabled
-  ? require('./NativeReefReferral').default
-  : NativeModules.ReefReferral;
+export async function getReferralStatusAsync(): Promise<ReferralStatus> {
+  return await ReefReferral.getReferralStatusAsync();
+}
 
-const ReefReferral = ReefReferralModule
-  ? ReefReferralModule
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+export async function handleDeepLinkAsync(url: string): Promise<void> {
+  return await ReefReferral.handleDeepLinkAsync(url);
+}
 
-export function multiply(a: number, b: number): Promise<number> {
-  return ReefReferral.multiply(a, b);
+export async function triggerSenderSuccessAsync(): Promise<void> {
+  return await ReefReferral.triggerSenderSuccessAsync();
+}
+
+export async function triggerReceiverSuccessAsync(): Promise<void> {
+  return await ReefReferral.triggerReceiverSuccessAsync();
+}
+
+export async function setUserId(userId: string): Promise<void> {
+  return await ReefReferral.setUserId(userId);
 }

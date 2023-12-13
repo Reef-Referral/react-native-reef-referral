@@ -1,8 +1,15 @@
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
+import type { ReferralStatus } from './types';
 
-export interface Spec extends TurboModule {
-  multiply(a: number, b: number): Promise<number>;
+export interface NativeReefReferralSpec extends TurboModule {
+  startAsync(apiKey: string): Promise<void>;
+  getReferralStatusAsync(): Promise<ReferralStatus>;
+  handleDeepLinkAsync(url: string): Promise<void>;
+  triggerSenderSuccessAsync(): Promise<void>;
+  triggerReceiverSuccessAsync(): Promise<void>;
+  setUserId(userId: string): Promise<void>;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>('ReefReferral');
+export const NativeReefReferral =
+  TurboModuleRegistry.getEnforcing<NativeReefReferralSpec>('ReefReferral');

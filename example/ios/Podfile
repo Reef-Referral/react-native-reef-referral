@@ -26,6 +26,9 @@ if linkage != nil
 end
 
 target 'ReefReferralExample' do
+  # TODO: Use template plugin
+  pod 'ReefReferral', path: '../../../reef-referral-ios'
+
   config = use_native_modules!
 
   use_react_native!(
