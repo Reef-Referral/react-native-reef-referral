@@ -164,7 +164,7 @@
     ]
   },
   "codegenConfig": {
-    "name": "RNReefReferralSpec",
+    "name": "RNReefReferral",
     "type": "modules",
     "jsSrcsDir": "src"
   }

@@ -1,6 +1,6 @@
 
 #ifdef RCT_NEW_ARCH_ENABLED
-#import "RNReefReferralSpec.h"
+#import "RNReefReferral.h"
 #import "RCTEventEmitter.h"
 
 @interface RNReefReferralModule : RCTEventEmitter <NativeReefReferralSpec>

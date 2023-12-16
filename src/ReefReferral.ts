@@ -1,7 +1,6 @@
 import { NativeModules, Platform } from 'react-native';
 
-import { BaseNativeReefReferral } from './BaseNativeReefReferral';
-import type { NativeReefReferralSpec } from './types';
+import type { Spec } from './NativeReefReferral';
 
 const LINKING_ERROR =
   `The package 'react-native-reef-referral' doesn't seem to be linked. Make sure: \n\n` +
@@ -12,8 +11,25 @@ const LINKING_ERROR =
 // @ts-expect-error
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
 
-const ReefReferralModule: NativeReefReferralSpec = isTurboModuleEnabled
-  ? require('./NativeReefReferral').NativeReefReferral
+const asyncNoop = () => Promise.resolve();
+const BaseNativeReefReferral: Spec = {
+  startAsync: asyncNoop,
+  getReferralStatusAsync: () => Promise.resolve(null),
+  handleDeepLinkAsync: asyncNoop,
+  triggerSenderSuccessAsync: asyncNoop,
+  triggerReceiverSuccessAsync: asyncNoop,
+  setUserIdAsync: asyncNoop,
+
+  getConstants: () => ({}),
+  addListener: asyncNoop,
+  removeListeners: asyncNoop,
+};
+
+const ReefReferralModule: Spec = isTurboModuleEnabled
+  ? Platform.select({
+      ios: require('./NativeReefReferral').NativeReefReferral,
+      default: BaseNativeReefReferral,
+    })
   : Platform.select({
       ios: NativeModules.ReefReferral,
       default: BaseNativeReefReferral,
@@ -21,7 +37,7 @@ const ReefReferralModule: NativeReefReferralSpec = isTurboModuleEnabled
 
 export const ReefReferral = ReefReferralModule
   ? ReefReferralModule
-  : new Proxy({} as NativeReefReferralSpec, {
+  : new Proxy({} as Spec, {
       get() {
         throw new Error(LINKING_ERROR);
       },
