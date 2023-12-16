@@ -80,7 +80,7 @@ RCT_EXPORT_METHOD(triggerReceiverSuccessAsync:(RCTPromiseResolveBlock)resolve
   resolve(nil);
 }
 
-RCT_EXPORT_METHOD(setUserId:(NSString *)userID
+RCT_EXPORT_METHOD(setUserIdAsync:(NSString *)userID
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject)
 {

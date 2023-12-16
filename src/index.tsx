@@ -1,9 +1,11 @@
+import { useEffect, useState } from 'react';
 import { NativeEventEmitter } from 'react-native';
 
 import { ReefReferral } from './ReefReferral';
 import type { ReferralStatus } from './types';
-
 export * from './types';
+
+const Emitter = new NativeEventEmitter(ReefReferral);
 
 export async function startAsync({
   apiKey,
@@ -13,7 +15,7 @@ export async function startAsync({
   return await ReefReferral.startAsync(apiKey);
 }
 
-export async function getReferralStatusAsync(): Promise<ReferralStatus> {
+export async function getReferralStatusAsync(): Promise<ReferralStatus | null> {
   return await ReefReferral.getReferralStatusAsync();
 }
 
@@ -29,11 +31,9 @@ export async function triggerReceiverSuccessAsync(): Promise<void> {
   return await ReefReferral.triggerReceiverSuccessAsync();
 }
 
-export async function setUserId(userId: string): Promise<void> {
-  return await ReefReferral.setUserId(userId);
+export async function setUserIdAsync(userId: string): Promise<void> {
+  return await ReefReferral.setUserIdAsync(userId);
 }
-
-const Emitter = new NativeEventEmitter(ReefReferral);
 
 export const addEventListener = (
   eventType: 'referralStatusUpdated',
@@ -43,3 +43,28 @@ export const addEventListener = (
 };
 
 export const removeAllListeners = Emitter.removeAllListeners;
+
+export const useReferralStatus = (): {
+  referralStatus: ReferralStatus | null;
+} => {
+  const [referralStatus, setReferralStatus] = useState<ReferralStatus | null>(
+    null
+  );
+
+  useEffect(() => {
+    const listener = addEventListener(
+      'referralStatusUpdated',
+      setReferralStatus
+    );
+
+    // First listener added will trigger an update,
+    // subsequent won't, so we need to also get-and-set.
+    getReferralStatusAsync().then(setReferralStatus);
+
+    return () => {
+      listener.remove();
+    };
+  }, []);
+
+  return { referralStatus };
+};

@@ -1,6 +1,6 @@
 import { NativeModules, Platform } from 'react-native';
 
-import type { NativeReefReferralSpec } from './NativeReefReferral';
+import type { NativeReefReferralSpec } from './types';
 
 const LINKING_ERROR =
   `The package 'react-native-reef-referral' doesn't seem to be linked. Make sure: \n\n` +

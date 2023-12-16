@@ -1,3 +1,5 @@
+import type { TurboModule } from 'react-native';
+
 export enum ReceiverOfferStatus {
   NotEligible = 'notEligible',
   Eligible = 'eligible',
@@ -27,3 +29,15 @@ export type ReferralStatus = {
   senderStatus: SenderStatus;
   userId: string;
 };
+
+export interface NativeReefReferralSpec extends TurboModule {
+  startAsync(apiKey: string): Promise<void>;
+  getReferralStatusAsync(): Promise<ReferralStatus | null>;
+  handleDeepLinkAsync(url: string): Promise<void>;
+  triggerSenderSuccessAsync(): Promise<void>;
+  triggerReceiverSuccessAsync(): Promise<void>;
+  setUserIdAsync(userId: string): Promise<void>;
+
+  addListener: (eventType: string) => void;
+  removeListeners: (count: number) => void;
+}

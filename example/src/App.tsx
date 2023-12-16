@@ -11,7 +11,8 @@ import {
 import * as ReefReferral from 'react-native-reef-referral';
 
 export default function App() {
-  const [result, setResult] = React.useState<ReefReferral.ReferralStatus>();
+  const [result, setResult] =
+    React.useState<ReefReferral.ReferralStatus | null>(null);
   const [deepLink, setDeepLink] = React.useState<string | null>();
 
   React.useEffect(() => {
@@ -89,9 +90,11 @@ export default function App() {
           }}
         />
         <Button
-          title="setUserId"
+          title="setUserIdAsync"
           onPress={() => {
-            ReefReferral.setUserId(`usr-${Math.random().toString().slice(2)}`);
+            ReefReferral.setUserIdAsync(
+              `usr-${Math.random().toString().slice(2)}`
+            );
           }}
         />
       </ScrollView>
