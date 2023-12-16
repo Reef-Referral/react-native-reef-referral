@@ -35,9 +35,10 @@
     "release": "release-it"
   },
   "keywords": [
+    "reef-referral",
+    "react-native-reef-referral",
     "react-native",
-    "ios",
-    "android"
+    "ios"
   ],
   "repository": {
     "type": "git",

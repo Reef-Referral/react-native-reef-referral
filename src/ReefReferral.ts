@@ -1,5 +1,6 @@
 import { NativeModules, Platform } from 'react-native';
 
+import { BaseNativeReefReferral } from './BaseNativeReefReferral';
 import type { NativeReefReferralSpec } from './types';
 
 const LINKING_ERROR =
@@ -12,8 +13,11 @@ const LINKING_ERROR =
 const isTurboModuleEnabled = global.__turboModuleProxy != null;
 
 const ReefReferralModule: NativeReefReferralSpec = isTurboModuleEnabled
-  ? require('./NativeReefReferral').default
-  : NativeModules.ReefReferral;
+  ? require('./NativeReefReferral').NativeReefReferral
+  : Platform.select({
+      ios: NativeModules.ReefReferral,
+      default: BaseNativeReefReferral,
+    });
 
 export const ReefReferral = ReefReferralModule
   ? ReefReferralModule
