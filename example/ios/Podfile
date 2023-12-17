@@ -27,7 +27,7 @@ end
 
 target 'ReefReferralExample' do
   # TODO: Use template plugin
-  pod 'ReefReferral', path: '../../../reef-referral-ios'
+  pod 'ReefReferral', git: 'git@github.com:Reef-Referral/reef-referral-ios.git'
 
   config = use_native_modules!
 

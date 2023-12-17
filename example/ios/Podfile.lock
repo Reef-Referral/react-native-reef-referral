@@ -1117,7 +1117,7 @@ PODS:
     - React-jsi (= 0.73.0)
     - React-logger (= 0.73.0)
     - React-perflogger (= 0.73.0)
-  - ReefReferral (0.0.0):
+  - ReefReferral (1.0.0):
     - Logging (~> 1.4.0)
   - SocketRocket (0.6.1)
   - Yoga (1.14.0)
@@ -1196,7 +1196,7 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - ReefReferral (from `../../../reef-referral-ios`)
+  - "ReefReferral (from `git@github.com:Reef-Referral/reef-referral-ios.git`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -1315,9 +1315,14 @@ EXTERNAL SOURCES:
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
   ReefReferral:
-    :path: "../../../reef-referral-ios"
+    :git: "git@github.com:Reef-Referral/reef-referral-ios.git"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
+
+CHECKOUT OPTIONS:
+  ReefReferral:
+    :commit: b0df7ea27e88741d22154f7fa34179c1aaea5357
+    :git: "git@github.com:Reef-Referral/reef-referral-ios.git"
 
 SPEC CHECKSUMS:
   boost: 26fad476bfa736552bbfa698a06cc530475c1505
@@ -1381,10 +1386,10 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 77543c74df984ce56c09d49d427149c53784aaf6
   React-utils: 42708ea436853045ef1eaff29996813d9fbbe209
   ReactCommon: 851280fb976399ca1aabc74cc2c3612069ea70a2
-  ReefReferral: 203153998031d80db864f2f7264af4a60409f731
+  ReefReferral: fd1cb8e7581dbf8560603f35df9c6157c2ad377b
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 44003f970aa541b79dfdd59cf236fda41bd5890f
 
-PODFILE CHECKSUM: ced07c2829159a3e7d25f97241a25a748768b443
+PODFILE CHECKSUM: 242b7f01d60c0f7b2dd9930049f4a65f36b3d6d8
 
 COCOAPODS: 1.14.2
