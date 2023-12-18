@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NativeEventEmitter } from 'react-native';
+import { Linking, NativeEventEmitter } from 'react-native';
 
 import { ReefReferral } from './ReefReferral';
 import type { ReferralStatus } from './types';
@@ -80,3 +80,37 @@ export const useReferralStatus = (): {
 
   return { referralStatus };
 };
+
+/** Setup SDK with provided API key and handle deep link opens */
+export function useReefReferral({ apiKey }: { apiKey: string }) {
+  const [url, setUrl] = useState<string | null>(null);
+
+  // Initialize SDK
+  useEffect(() => {
+    startAsync({ apiKey }).catch((err) => {
+      console.warn('Failed to start Reef Referral SDK', err);
+    });
+  }, [apiKey]);
+
+  // Set up initial URL
+  useEffect(() => {
+    Linking.getInitialURL().then(setUrl);
+  }, []);
+
+  // Set up subscription
+  useEffect(() => {
+    const subscription = Linking.addEventListener('url', ({ url: nextUrl }) => {
+      setUrl(nextUrl);
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  // Handle deep links
+  useEffect(() => {
+    if (url) {
+      ReefReferral.handleDeepLinkAsync(url).catch(console.warn);
+    }
+  }, [url]);
+}
