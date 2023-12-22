@@ -94,7 +94,14 @@ export function useReefReferral({ apiKey }: { apiKey: string }) {
 
   // Set up initial URL
   useEffect(() => {
-    Linking.getInitialURL().then(setUrl);
+    Linking.getInitialURL()
+      .then(setUrl)
+      .catch((err) =>
+        console.warn(
+          'react-native-reef-referral: failed to fetch initial URL',
+          err
+        )
+      );
   }, []);
 
   // Set up subscription
@@ -110,7 +117,12 @@ export function useReefReferral({ apiKey }: { apiKey: string }) {
   // Handle deep links
   useEffect(() => {
     if (url) {
-      ReefReferral.handleDeepLinkAsync(url).catch(console.warn);
+      ReefReferral.handleDeepLinkAsync(url).catch((err) =>
+        console.warn(
+          `react-native-reef-referral: failed to handle deep link \`${url}\``,
+          err
+        )
+      );
     }
   }, [url]);
 }
