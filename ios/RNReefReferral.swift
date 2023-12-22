@@ -76,7 +76,7 @@ extension ReefReferral.ReferralStatus {
         "redeemedCount": senderStatus.redeemedCount,
         "rewardEligibility": senderStatus.rewardEligibility.asJsValue
       ],
-      "userID": userID
+      "userId": userID
     ]
   }
 }
