@@ -15,7 +15,7 @@ export default function App() {
     apiKey: '12b5831a-c4eb-4855-878f-e5fdacce8e18',
   });
 
-  const { referralStatus } = ReefReferral.useReferralStatus();
+  const { referralStatus, refresh } = ReefReferral.useReferralStatus();
 
   React.useEffect(() => {
     console.log(referralStatus);
@@ -86,6 +86,14 @@ export default function App() {
             ReefReferral.setUserIdAsync(
               `usr-${Math.random().toString().slice(2)}`
             ).catch((err) => console.warn('failed to set user id', err));
+          }}
+        />
+        <Button
+          title="Refresh"
+          onPress={() => {
+            refresh().catch((err) =>
+              console.warn('failed to refresh status', err)
+            );
           }}
         />
       </ScrollView>

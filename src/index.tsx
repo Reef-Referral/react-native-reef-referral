@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Linking, NativeEventEmitter } from 'react-native';
 
 import { ReefReferral } from './ReefReferral';
@@ -58,6 +58,7 @@ export const removeAllListeners = Emitter.removeAllListeners;
  */
 export const useReferralStatus = (): {
   referralStatus: ReferralStatus | null;
+  refresh: () => Promise<ReferralStatus | null>;
 } => {
   const [referralStatus, setReferralStatus] = useState<ReferralStatus | null>(
     null
@@ -78,7 +79,13 @@ export const useReferralStatus = (): {
     };
   }, []);
 
-  return { referralStatus };
+  const refresh = useCallback(async () => {
+    const nextReferralStatus = await getReferralStatusAsync();
+    setReferralStatus(nextReferralStatus);
+    return nextReferralStatus;
+  }, []);
+
+  return { referralStatus, refresh };
 };
 
 /** Setup SDK with provided API key and handle deep link opens */
