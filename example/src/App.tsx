@@ -11,82 +11,73 @@ import {
 import * as ReefReferral from 'react-native-reef-referral';
 
 export default function App() {
-  const [result, setResult] =
-    React.useState<ReefReferral.ReferralStatus | null>(null);
-  const [deepLink, setDeepLink] = React.useState<string | null>();
+  ReefReferral.useReefReferral({
+    apiKey: '12b5831a-c4eb-4855-878f-e5fdacce8e18',
+  });
+
+  const { referralStatus } = ReefReferral.useReferralStatus();
 
   React.useEffect(() => {
-    ReefReferral.startAsync({
-      apiKey: '12b5831a-c4eb-4855-878f-e5fdacce8e18',
-    });
-  }, []);
-
-  React.useEffect(() => {
-    Linking.getInitialURL().then(setDeepLink);
-  }, []);
-
-  React.useEffect(() => {
-    ReefReferral.getReferralStatusAsync().then(setResult);
-  }, []);
-
-  React.useEffect(() => {
-    const listener = Linking.addEventListener('url', ({ url }) => {
-      console.log('handling deep link', url);
-      setDeepLink(url);
-    });
-    return () => {
-      listener.remove();
-    };
-  }, []);
-
-  React.useEffect(() => {
-    const listener = ReefReferral.addEventListener(
-      'referralStatusUpdated',
-      (status) => {
-        console.log('handling updated status', status);
-        setResult(status);
-      }
-    );
-    return () => {
-      listener.remove();
-    };
-  }, []);
+    console.log(referralStatus);
+  }, [referralStatus]);
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
-        <Text>Deep Link: {JSON.stringify(deepLink)}</Text>
-        <Text>Result: {JSON.stringify(result, null, 2)}</Text>
-        <Button
-          title="Open URL"
-          disabled={!result?.senderStatus.linkUrl}
-          onPress={() => {
-            Linking.openURL(result!.senderStatus.linkUrl!);
-          }}
-        />
-        <Button
-          title="getReferralStatusAsync"
-          onPress={() => {
-            ReefReferral.getReferralStatusAsync().then(setResult);
-          }}
-        />
+        <Text>Receiver Status</Text>
+        {referralStatus?.receiverStatus ? (
+          <>
+            <Text>Offer URL: {referralStatus.receiverStatus.offerCodeUrl}</Text>
+            <Text>
+              Reward eligibility:{' '}
+              {referralStatus.receiverStatus.rewardEligibility}
+            </Text>
+          </>
+        ) : (
+          <Text>unknown</Text>
+        )}
+        <Text>Sender Status</Text>
+        {referralStatus ? (
+          <>
+            <Text>
+              Link URL:{' '}
+              <Text
+                style={styles.link}
+                onPress={() =>
+                  Linking.openURL(referralStatus.senderStatus.linkUrl!)
+                }
+              >
+                {referralStatus.senderStatus.linkUrl}
+              </Text>
+            </Text>
+            <Text>Offer URL: {referralStatus.senderStatus.offerCodeUrl}</Text>
+            <Text>
+              Redeemed reward: {referralStatus.senderStatus.redeemedCount}x
+            </Text>
+            <Text>
+              Reward eligibility:{' '}
+              {referralStatus.senderStatus.rewardEligibility}
+            </Text>
+          </>
+        ) : (
+          <Text>unknown</Text>
+        )}
+        <Text>User ID</Text>
+        <Text>{referralStatus?.userId ?? 'unknown'}</Text>
         <Button
           title="triggerReceiverSuccessAsync"
           onPress={() => {
-            ReefReferral.triggerReceiverSuccessAsync();
+            ReefReferral.triggerReceiverSuccessAsync().catch((err) =>
+              console.warn('failed to trigger receiver success', err)
+            );
           }}
         />
         <Button
           title="triggerSenderSuccessAsync"
           onPress={() => {
-            ReefReferral.triggerSenderSuccessAsync();
-          }}
-        />
-        <Button
-          title="handleDeepLinkAsync"
-          disabled={!deepLink}
-          onPress={() => {
-            ReefReferral.handleDeepLinkAsync(deepLink!).catch(console.warn);
+            ReefReferral.triggerSenderSuccessAsync().catch((err) =>
+              console.warn('failed to trigger sender success', err)
+            );
           }}
         />
         <Button
@@ -94,7 +85,7 @@ export default function App() {
           onPress={() => {
             ReefReferral.setUserIdAsync(
               `usr-${Math.random().toString().slice(2)}`
-            );
+            ).catch((err) => console.warn('failed to set user id', err));
           }}
         />
       </ScrollView>
@@ -106,9 +97,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
+  link: {
+    color: 'blue',
   },
 });
