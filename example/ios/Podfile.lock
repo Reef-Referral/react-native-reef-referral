@@ -945,7 +945,7 @@ PODS:
   - React-Mapbuffer (0.73.0):
     - glog
     - React-debug
-  - react-native-reef-referral (0.1.0):
+  - react-native-reef-referral (0.0.0):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1365,7 +1365,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 9f6fb9ed9f03a0fb961ab8dc2e0e0ee0dc729e77
   React-logger: 008caec0d6a587abc1e71be21bfac5ba1662fe6a
   React-Mapbuffer: 58fe558faf52ecde6705376700f848d0293d1cef
-  react-native-reef-referral: 5e6851b3c2039fbd25123c02bb0bb9a7b2c97548
+  react-native-reef-referral: 06c9f6e0d2ea4308c62dea373b2835ff7f1c2194
   React-nativeconfig: a063483672b8add47a4875b0281e202908ff6747
   React-NativeModulesApple: 169506a5fd708ab22811f76ee06a976595c367a1
   React-perflogger: b61e5db8e5167f5e70366e820766c492847c082e
@@ -1390,6 +1390,6 @@ SPEC CHECKSUMS:
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 44003f970aa541b79dfdd59cf236fda41bd5890f
 
-PODFILE CHECKSUM: 242b7f01d60c0f7b2dd9930049f4a65f36b3d6d8
+PODFILE CHECKSUM: 82e7ce69b434c7d036f9f5e0112b347f8ef4f55a
 
 COCOAPODS: 1.14.2
