@@ -1,6 +1,11 @@
 name: Setup
 description: Setup Node.js and install dependencies
 
+inputs:
+  ssh_key:
+    required: false
+    description: "Private SSH RSA key"
+
 runs:
   using: composite
   steps:
@@ -17,9 +22,10 @@ runs:
         echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
 
     - name: Add ssh key
+      if: ${{ inputs.ssh_key != '' }}
       shell: bash
       run: |
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519 && \
+        echo "${{ inputs.ssh_key }}" > ~/.ssh/id_ed25519 && \
         chmod 600 ~/.ssh/id_ed25519 && \
         ssh-add ~/.ssh/id_ed25519
 
