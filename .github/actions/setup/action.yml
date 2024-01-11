@@ -9,6 +9,20 @@ runs:
       with:
         node-version-file: .nvmrc
 
+    - name: Start SSH Agent
+      shell: bash
+      run: |
+        eval "$(ssh-agent)"
+        echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+        echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
+
+    - name: Add ssh key
+      shell: bash
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519 && \
+        chmod 600 ~/.ssh/id_ed25519 && \
+        ssh-add ~/.ssh/id_ed25519
+
     - name: Cache dependencies
       id: yarn-cache
       uses: actions/cache@v3
