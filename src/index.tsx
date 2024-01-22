@@ -130,6 +130,9 @@ export function useReefReferral({ apiKey }: { apiKey: string }) {
           err
         )
       );
+      // Clear the value so the effect runs again
+      // if the same link is opened again.
+      setUrl(null);
     }
-  }, [url]);
+  }, [url, setUrl]);
 }
