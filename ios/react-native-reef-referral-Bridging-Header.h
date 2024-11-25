@@ -4,4 +4,4 @@
 
 #import <React/RCTBridgeModule.h>
 #import <React/RCTViewManager.h>
-#import <react-native-reef-referral/RNReefReferralModule.h>
+#import "RNReefReferralModule.h"
