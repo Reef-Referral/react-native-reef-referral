@@ -40,6 +40,8 @@ jobs:
     needs: check-commit
     # Skip if the commit message is a release commit
     if: ${{ needs.check-commit.outputs.skip != 'true' }}
+    permission: 
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
